@@ -97,10 +97,6 @@
       return;
     }
 
-    // Only now do we opt into the "hidden until revealed" CSS behavior —
-    // this confirms the observer is actually about to run.
-    document.documentElement.classList.add("js-ready");
-
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
         if(entry.isIntersecting){
