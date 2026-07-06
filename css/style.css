@@ -234,9 +234,14 @@ p{ color:var(--color-ink-soft); line-height:1.7; }
 .hero-stat .label{ font-size:.82rem; color:#9a9aa1; margin-top:6px; letter-spacing:.02em; }
 
 /* ---------- reveal ---------- */
-.reveal{ opacity:0; transform:translateY(36px); transition:opacity .8s var(--ease),transform .8s var(--ease); transition-delay:calc(var(--d,0) * 90ms); }
+.reveal{ opacity:1; transform:none; }
+.reveal-scale{ opacity:1; transform:none; }
+/* Content is fully visible by default. Only when JS confirms it can run (html.has-js)
+   AND has attached the scroll-reveal observer do we hide-then-animate elements in.
+   This guarantees text is never stuck invisible if a script fails, is blocked, or is slow. */
+.has-js.js-ready .reveal{ opacity:0; transform:translateY(36px); transition:opacity .8s var(--ease),transform .8s var(--ease); transition-delay:calc(var(--d,0) * 90ms); }
+.has-js.js-ready .reveal-scale{ opacity:0; transform:scale(.92); transition:opacity .7s var(--ease),transform .7s var(--ease); }
 .reveal.is-visible{ opacity:1; transform:translateY(0); }
-.reveal-scale{ opacity:0; transform:scale(.92); transition:opacity .7s var(--ease),transform .7s var(--ease); }
 .reveal-scale.is-visible{ opacity:1; transform:scale(1); }
 
 /* ---------- cards ---------- */
@@ -444,8 +449,14 @@ input[type="range"]{ flex:1; accent-color:var(--color-accent); height:4px; }
 .cursor-ring.is-active{ width:54px; height:54px; opacity:1; }
 @media (pointer:coarse){ .cursor-dot,.cursor-ring{ display:none; } }
 
-.preloader{ position:fixed; inset:0; background:var(--color-ink); z-index:10000; display:flex; align-items:center; justify-content:center; transition:opacity .6s var(--ease),visibility .6s; }
+.preloader{
+  position:fixed; inset:0; background:var(--color-ink); z-index:10000; display:flex; align-items:center; justify-content:center;
+  transition:opacity .6s var(--ease),visibility .6s;
+  /* Hard safety net: auto-hide after 2.5s no matter what, even if JS never runs. */
+  animation:forcePreloaderHide 0s linear 2.5s forwards;
+}
 .preloader.is-hidden{ opacity:0; visibility:hidden; }
+@keyframes forcePreloaderHide{ to{ opacity:0; visibility:hidden; pointer-events:none; } }
 .preloader-mark{ font-family:var(--font-display); font-weight:700; color:#fff; font-size:2rem; letter-spacing:.02em; display:flex; gap:4px; }
 .preloader-mark span{ display:inline-block; animation:pulseLetter 1.2s ease-in-out infinite; }
 .preloader-mark span:nth-child(2){ animation-delay:.1s; color:var(--color-accent); }

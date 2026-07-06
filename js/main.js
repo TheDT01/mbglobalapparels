@@ -5,17 +5,21 @@
   "use strict";
 
   /* ---------- preloader ---------- */
-  window.addEventListener("load", function(){
-    var pre = document.getElementById("preloader");
-    if(pre){
-      setTimeout(function(){
-        pre.classList.add("is-hidden");
-        document.body.classList.add("page-ready");
-      }, 400);
-    } else {
+  (function(){
+    var hidden = false;
+    function hidePreloader(){
+      if(hidden) return;
+      hidden = true;
+      var pre = document.getElementById("preloader");
+      if(pre){ pre.classList.add("is-hidden"); }
       document.body.classList.add("page-ready");
     }
-  });
+    window.addEventListener("load", function(){ setTimeout(hidePreloader, 300); });
+    // Hard fallback in case the load event is delayed or never fires
+    // (slow/blocked external font request, etc.) — never leave the
+    // preloader covering the page indefinitely.
+    setTimeout(hidePreloader, 1800);
+  })();
 
   /* ---------- theme toggle ---------- */
   var THEME_KEY = "mbga-theme";
@@ -87,10 +91,16 @@
   /* ---------- scroll reveal ---------- */
   document.addEventListener("DOMContentLoaded", function(){
     var items = document.querySelectorAll(".reveal, .reveal-scale, .process-step");
+
     if(!("IntersectionObserver" in window)){
       items.forEach(function(el){ el.classList.add("is-visible"); });
       return;
     }
+
+    // Only now do we opt into the "hidden until revealed" CSS behavior —
+    // this confirms the observer is actually about to run.
+    document.documentElement.classList.add("js-ready");
+
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
         if(entry.isIntersecting){
@@ -100,6 +110,13 @@
       });
     }, { threshold:0.15, rootMargin:"0px 0px -60px 0px" });
     items.forEach(function(el){ io.observe(el); });
+
+    // Safety net: if anything is somehow never observed as intersecting
+    // (edge cases, extremely tall sections, etc.) force it visible so
+    // text can never be stuck invisible.
+    setTimeout(function(){
+      items.forEach(function(el){ el.classList.add("is-visible"); });
+    }, 2500);
 
     // process line fill
     var line = document.querySelector(".process-line-fill");
