@@ -1,0 +1,16 @@
+{
+  "name": "mb-global-apparels-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Company profile website for MB Global Apparels.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
