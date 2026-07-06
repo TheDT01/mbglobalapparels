@@ -363,4 +363,38 @@
     });
   });
 
+
+
+  /* ---------- gallery lightbox ---------- */
+  document.addEventListener("DOMContentLoaded", function(){
+    var lightbox = document.getElementById("lightbox");
+    if(!lightbox) return;
+    var lbLabel = document.getElementById("lightboxLabel");
+    var lbCaption = document.getElementById("lightboxCaption");
+    var closeBtn = lightbox.querySelector(".lightbox-close");
+
+    document.querySelectorAll(".gallery-item").forEach(function(item){
+      item.addEventListener("click", function(){
+        var label = item.getAttribute("data-label") || "Gallery Image";
+        var caption = item.getAttribute("data-caption") || "";
+        lbLabel.textContent = label;
+        lbCaption.textContent = caption;
+        lightbox.classList.add("is-open");
+        document.body.style.overflow = "hidden";
+      });
+    });
+
+    function closeLightbox(){
+      lightbox.classList.remove("is-open");
+      document.body.style.overflow = "";
+    }
+    closeBtn.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", function(e){
+      if(e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener("keydown", function(e){
+      if(e.key === "Escape") closeLightbox();
+    });
+  });
+
 })();

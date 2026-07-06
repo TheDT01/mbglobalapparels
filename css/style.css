@@ -151,13 +151,8 @@ p{ color:var(--color-ink-soft); line-height:1.7; }
 .header-inner{ display:flex; align-items:center; justify-content:space-between; gap:24px; }
 
 .logo{ display:flex; align-items:center; gap:12px; flex-shrink:0; }
-.logo-mark{
-  width:44px; height:44px; border-radius:12px; background:var(--color-ink); color:var(--color-bg);
-  display:flex; align-items:center; justify-content:center; font-family:var(--font-display);
-  font-weight:700; font-size:1.05rem; flex-shrink:0; position:relative; overflow:hidden;
-}
-.logo-mark::after{ content:''; position:absolute; inset:0; background:linear-gradient(135deg,var(--color-accent),transparent 60%); opacity:.85; }
-.logo-mark span{ position:relative; z-index:1; }
+.logo-mark{ height:42px; width:auto; display:flex; align-items:center; flex-shrink:0; }
+.logo-mark img{ height:100%; width:auto; display:block; }
 .logo-text{ font-family:var(--font-display); font-weight:700; font-size:.82rem; line-height:1.15; letter-spacing:.03em; }
 .logo-text em{ font-style:normal; color:var(--color-accent); display:block; }
 
@@ -530,3 +525,43 @@ body.page-ready{ animation:pageIn .6s var(--ease); }
   .cta-band{ padding:44px 20px; }
   .estimator{ padding:28px; }
 }
+
+
+/* ---------- header contrast over dark home hero ---------- */
+/* Only the home page has a dark hero directly under the transparent header.
+   Until the header picks up its solid background (is-scrolled), keep header
+   text light so it's actually readable against the dark hero. */
+body[data-page="home"] .site-header:not(.is-scrolled) .main-nav a{ color:rgba(255,255,255,.86); }
+body[data-page="home"] .site-header:not(.is-scrolled) .main-nav a:hover,
+body[data-page="home"] .site-header:not(.is-scrolled) .main-nav a.active{ color:#fff; }
+body[data-page="home"] .site-header:not(.is-scrolled) .logo-text{ color:#fff; }
+body[data-page="home"] .site-header:not(.is-scrolled) .theme-toggle{ border-color:rgba(255,255,255,.35); color:#fff; }
+body[data-page="home"] .site-header:not(.is-scrolled) .btn-outline{ border-color:rgba(255,255,255,.4); color:#fff; }
+body[data-page="home"] .site-header:not(.is-scrolled) .nav-toggle span{ background:#fff; }
+@media (max-width:860px){
+  /* mobile nav panel always renders on solid bg regardless of header state */
+  body[data-page="home"] .main-nav.is-open a{ color:var(--color-ink-soft); }
+  body[data-page="home"] .main-nav.is-open a:hover,
+  body[data-page="home"] .main-nav.is-open a.active{ color:var(--color-ink); }
+}
+
+/* ---------- lightbox (gallery) ---------- */
+.gallery-item{ cursor:pointer; }
+.gallery-item .ph{ transition:transform .5s var(--ease); }
+.gallery-item:hover .ph{ transform:translateY(-4px); box-shadow:var(--shadow-md); }
+.lightbox{
+  position:fixed; inset:0; z-index:2000; background:rgba(10,10,11,.92);
+  display:flex; align-items:center; justify-content:center; opacity:0; visibility:hidden;
+  transition:opacity .35s var(--ease),visibility .35s; padding:40px;
+}
+.lightbox.is-open{ opacity:1; visibility:visible; }
+.lightbox-inner{ position:relative; width:min(720px,90vw); }
+.lightbox-inner .ph{ aspect-ratio:4/3; border-radius:var(--radius-lg); }
+.lightbox-close{
+  position:absolute; top:-52px; right:0; width:40px; height:40px; border-radius:50%;
+  background:rgba(255,255,255,.1); color:#fff; display:flex; align-items:center; justify-content:center;
+  transition:background .3s;
+}
+.lightbox-close:hover{ background:var(--color-accent); }
+.lightbox-close svg{ width:18px; height:18px; }
+.lightbox-caption{ text-align:center; color:#d4d4d8; margin-top:20px; font-size:.9rem; letter-spacing:.03em; text-transform:uppercase; }
